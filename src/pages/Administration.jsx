@@ -1,7 +1,7 @@
 import { aboutPhoto, rubyc, robert, subra, raja, dinesh, kanda, lava, wilson, suresh, ben } from '../pageAssets.js'
-import PageBanner from './PageBannerComponent.jsx'
+import PageBanner from '../components/PageBanner.jsx'
 
-export default function AdministrationPage() {
+export default function Administration() {
   const officeBearers = [
     ['H. Robert Livingston', 'Center Chairman', robert],
     ['A. Subramanian', 'Vice Chairman', subra],

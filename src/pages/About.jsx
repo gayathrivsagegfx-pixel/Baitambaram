@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { aim1, aim2, aim3, aboutPhoto } from '../pageAssets.js'
-import PageBanner from './PageBannerComponent.jsx'
+import PageBanner from '../components/PageBanner.jsx'
 
-export default function AboutPage() {
+export default function About() {
   const aboutSectionsRef = useRef(null)
   const sections = [
     {

@@ -1,7 +1,142 @@
+import { useEffect, useRef, useState } from 'react'
 import { heroSlides, benefitImages, benefitLabels, focusItems, growImages } from '../pageData.js'
 import { ruby, member, thrive } from '../pageAssets.js'
 
-export default function HomePage({ activeSlide, setActiveSlide, changeSlide, activeGrowSlide, startGrowSwipe, finishGrowSwipe, cancelGrowSwipe, setActiveGrowSlide, changeGrowSlide, eventsSectionRef, eventsCardRef, eventsRevealed, founderImageRef, benefitReverse, setBenefitReverse, sponsorGridRef, sponsorsRevealed, activeTab, setActiveTab, careerSectionRef, careerRevealed }) {
+export default function Home() {
+  const [activeSlide, setActiveSlide] = useState(0)
+  const [activeGrowSlide, setActiveGrowSlide] = useState(0)
+  const [benefitReverse, setBenefitReverse] = useState(false)
+  const [activeTab, setActiveTab] = useState('why')
+  const growPointerStart = useRef(null)
+  const eventsSectionRef = useRef(null)
+  const eventsCardRef = useRef(null)
+  const founderImageRef = useRef(null)
+  const careerSectionRef = useRef(null)
+  const sponsorGridRef = useRef(null)
+  const [eventsRevealed, setEventsRevealed] = useState(false)
+  const [careerRevealed, setCareerRevealed] = useState(false)
+  const [sponsorsRevealed, setSponsorsRevealed] = useState(false)
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % heroSlides.length)
+    }, 6500)
+    return () => window.clearInterval(timer)
+  }, [])
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveGrowSlide((current) => (current + 1) % growImages.length)
+    }, 4500)
+    return () => window.clearInterval(timer)
+  }, [])
+
+  useEffect(() => {
+    const card = eventsCardRef.current
+    if (!card) return undefined
+    if (!('IntersectionObserver' in window)) {
+      setEventsRevealed(true)
+      return undefined
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setEventsRevealed(true)
+        observer.unobserve(card)
+      }
+    }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' })
+    observer.observe(card)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const section = careerSectionRef.current
+    if (!section) return undefined
+    if (!('IntersectionObserver' in window)) {
+      setCareerRevealed(true)
+      return undefined
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setCareerRevealed(true)
+        observer.unobserve(section)
+      }
+    }, { threshold: 0.2, rootMargin: '0px 0px -50px 0px' })
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const grid = sponsorGridRef.current
+    if (!grid) return undefined
+    if (!('IntersectionObserver' in window)) {
+      setSponsorsRevealed(true)
+      return undefined
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setSponsorsRevealed(true)
+        observer.unobserve(grid)
+      }
+    }, { threshold: 0.15, rootMargin: '0px 0px -30px 0px' })
+    observer.observe(grid)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const section = eventsSectionRef.current
+    const image = founderImageRef.current
+    if (!section || !image) return undefined
+    let frame = 0
+    const updateCardPosition = () => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => {
+        const bounds = section.getBoundingClientRect()
+        const range = window.innerHeight + bounds.height
+        const progress = Math.min(1, Math.max(0, (window.innerHeight - bounds.top) / range))
+        const distance = Math.min(120, window.innerWidth * 0.22)
+        const offset = distance * (1 - progress)
+        image.style.setProperty('--ruby-scroll-x', `${offset}px`)
+      })
+    }
+    updateCardPosition()
+    window.addEventListener('scroll', updateCardPosition, { passive: true })
+    window.addEventListener('resize', updateCardPosition)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', updateCardPosition)
+      window.removeEventListener('resize', updateCardPosition)
+    }
+  }, [])
+
+  const changeSlide = (direction) => {
+    setActiveSlide((current) => (current + direction + heroSlides.length) % heroSlides.length)
+  }
+
+  const startGrowSwipe = (event) => {
+    if (event.pointerType === 'touch' || event.pointerType === 'pen') {
+      growPointerStart.current = { x: event.clientX, y: event.clientY }
+    }
+  }
+
+  const finishGrowSwipe = (event) => {
+    const start = growPointerStart.current
+    growPointerStart.current = null
+    if (!start) return
+    const deltaX = event.clientX - start.x
+    const deltaY = event.clientY - start.y
+    const primaryDelta = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : deltaY
+    if (Math.abs(primaryDelta) < 32) return
+    setActiveGrowSlide((current) => (current + (primaryDelta < 0 ? 1 : -1) + growImages.length) % growImages.length)
+  }
+
+  const cancelGrowSwipe = () => {
+    growPointerStart.current = null
+  }
+
+  const changeGrowSlide = (direction) => {
+    setActiveGrowSlide((current) => (current + direction + growImages.length) % growImages.length)
+  }
+
   return (<>
         <section className="hero" aria-label="Featured stories">
           {heroSlides.map((slide, index) => <div key={slide} className={activeSlide === index ? 'hero-image is-active' : 'hero-image'} style={{ backgroundImage: `url("${slide}")` }} aria-hidden="true" />)}

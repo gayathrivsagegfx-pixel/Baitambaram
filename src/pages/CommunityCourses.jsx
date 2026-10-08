@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { aboutPhoto, grow4, formBackground, member } from '../pageAssets.js'
-import PageBanner from './PageBannerComponent.jsx'
+import PageBanner from '../components/PageBanner.jsx'
 
-export default function CommunityPage() {
+export default function CommunityCourses() {
   const pageRef = useRef(null)
 
   useEffect(() => {

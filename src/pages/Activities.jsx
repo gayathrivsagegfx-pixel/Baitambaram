@@ -1,8 +1,8 @@
 import { aboutPhoto } from '../pageAssets.js'
-import PageBanner from './PageBannerComponent.jsx'
+import PageBanner from '../components/PageBanner.jsx'
 import { activityImages } from '../pageData.js'
 
-export default function ActivitiesPage() {
+export default function Activities() {
   const galleries = [
     { title: 'BAI Tambaram Centre Inauguration', start: 0, end: 5 },
     { title: 'Chairman V Lavakumar, Installation Function 2021-22', start: 5, end: 9 },

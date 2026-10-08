@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { formBackground, skyline } from '../pageAssets.js'
-import PageBanner from './PageBannerComponent.jsx'
+import PageBanner from '../components/PageBanner.jsx'
 
-export default function ContactPage() {
+export default function Contact() {
   const [formStatus, setFormStatus] = useState('idle')
 
   useEffect(() => {

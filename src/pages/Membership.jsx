@@ -1,7 +1,7 @@
 import { aboutPhoto } from '../pageAssets.js'
-import PageBanner from './PageBannerComponent.jsx'
+import PageBanner from '../components/PageBanner.jsx'
 
-export default function MembershipPage() {
+export default function Membership() {
   return (
     <div id="membership-top">
       <PageBanner title="BECOME A MEMBER" image={aboutPhoto} />
